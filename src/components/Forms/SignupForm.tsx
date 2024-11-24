@@ -3,8 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import "../../app/styles/globals.css"
 
-import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
@@ -15,6 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Button } from "../ui/button"
 
 const SignupSchema = z.object({
     email: z.string().min(2, {
@@ -30,9 +31,6 @@ const SignupSchema = z.object({
 export function SignupForm() {
     const LoginForm = useForm<z.infer<typeof SignupSchema>>({
         resolver: zodResolver(SignupSchema),
-        defaultValues: {
-            email: "",
-        },
     })
 
     function onSubmit(data: z.infer<typeof SignupSchema>) {

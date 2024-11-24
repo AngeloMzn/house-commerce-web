@@ -4,7 +4,7 @@ import NavLogo from "./navLogo";
 import NavUserMenu from "./navUserMenu";
 
 const settings = ['registrar', 'login'];
-const routes = ['/signin', '/signup'];
+const routes = ['/signup', '/signin'];
 
 export default function UnauthenticatedNavBar() {
     return(

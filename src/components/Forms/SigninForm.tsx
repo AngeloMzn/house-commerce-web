@@ -4,17 +4,20 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Button } from "@/components/ui/button"
+import "../../app/styles/globals.css"
+
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
+
+
 
 const SigninSchema = z.object({
     email: z.string().min(2, {
@@ -30,11 +33,7 @@ const SigninSchema = z.object({
 export function SigninForm() {
     const LoginForm = useForm<z.infer<typeof SigninSchema>>({
         resolver: zodResolver(SigninSchema),
-        defaultValues: {
-            email: "",
-        },
     })
-
     function onSubmit(data: z.infer<typeof SigninSchema>) {
         console.log(data);
     }

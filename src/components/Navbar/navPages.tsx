@@ -1,5 +1,6 @@
+'use client';
 import { Box, IconButton, Menu, MenuItem, Typography, Button } from "@mui/material";
-import React from "react";
+import React, { use } from "react";
 import MenuIcon from '@mui/icons-material/Menu';
 
 const pages = ['Products', 'Pricing', 'Blog'];
