@@ -18,6 +18,8 @@ import { z } from "zod"
 import axios from "axios"
 
 import "../../../app/styles/globals.css"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignupSchema = z.object({
     email: z.string().min(2, {
@@ -42,53 +44,62 @@ export function SignupForm() {
                     'Authorization': 'Bearer ' + process.env.NEXT_PUBLIC_API_KEY
                 }
             });
+
+            if (response.status === 200) {
+                toast.success(response.data.message);
+            }
+
         } catch (error) {
             console.error('Error during signup:', error);
+            toast.error('Error during signup ' + error);
         }
     }
 
     return (
-        <section>
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="rounded bg-white p-10 shadow-2xl w-full max-w-lg">
-                    <h1 className="text-3xl font-light"><strong>Insira suas credenciais para registrar-se</strong></h1>
-                    <hr />
-                    <Form {...LoginForm}>
-                        <form onSubmit={LoginForm.handleSubmit(onSubmit)} className="space-y-8 pt-5">
-                            <FormField
-                                control={LoginForm.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email:</FormLabel>
-                                        <FormControl>
-                                            <Input type="email" placeholder="Digite seu email." {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={LoginForm.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Senha:</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" placeholder="Digite sua senha." {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <div className="flex items-center justify-center">
-                                <Button className="w-full" type="submit">Cadastrar</Button>
-                            </div>
-                        </form>
-                    </Form>
+        <>
+            <section>
+                <div className="flex items-center justify-center min-h-screen">
+                    <div className="rounded bg-white p-10 shadow-2xl w-full max-w-lg">
+                        <h1 className="text-3xl font-light"><strong>Insira suas credenciais para registrar-se</strong></h1>
+                        <hr />
+                        <Form {...LoginForm}>
+                            <form onSubmit={LoginForm.handleSubmit(onSubmit)} className="space-y-8 pt-5">
+                                <FormField
+                                    control={LoginForm.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Email:</FormLabel>
+                                            <FormControl>
+                                                <Input type="email" placeholder="Digite seu email." {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={LoginForm.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Senha:</FormLabel>
+                                            <FormControl>
+                                                <Input type="password" placeholder="Digite sua senha." {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className="flex items-center justify-center">
+                                    <Button className="w-full" type="submit">Cadastrar</Button>
+                                </div>
+                            </form>
+                        </Form>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+            <ToastContainer />
+        </>
     )
 
 }

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import "../../app/styles/globals.css"
+import "../../../app/styles/globals.css"
 
 import {
     Form,
@@ -16,6 +16,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "../../ui/input"
 import { Button } from "../../ui/button"
+import axios from "axios"
+import { toast } from "react-toastify"
+import { useRouter } from "next/navigation"
+import { signIn, useSession } from "next-auth/react"
 
 
 
@@ -34,8 +38,23 @@ export function SigninForm() {
     const LoginForm = useForm<z.infer<typeof SigninSchema>>({
         resolver: zodResolver(SigninSchema),
     })
-    function onSubmit(data: z.infer<typeof SigninSchema>) {
-        console.log(data);
+
+   const router = useRouter();  
+    async function onSubmit(data: z.infer<typeof SigninSchema>) {
+        try {
+            const response = await signIn('credentials', {
+                email: data.email,
+                password: data.password
+            });
+
+            if (response?.status === 200) {
+                router.push('/index');
+                toast.success('Login efetuado com sucesso');	
+            }
+        } catch (error) {
+            console.error('Error during signup:', error);
+            toast.error('Error during signup ' + error);
+        }
     }
 
     return (

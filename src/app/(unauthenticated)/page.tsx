@@ -1,7 +1,8 @@
+'use client';
 export default function UnauthenticatedHome() {
   return (
     <>
-      <h1>teste não logado na home !</h1>
+      <h1>Clique no seu perfil para registrar ou logar</h1>
     </>
   );
 }
