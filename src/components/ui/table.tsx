@@ -2,15 +2,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
+import EditarModal from '../modals/editar-produto-modal';
 
-const handleEdit = (id: number) => {
-  console.log(`Edit row with id: ${id}`);
-};
 
-const handleDelete = (id: number) => {
-  console.log(`Delete row with id: ${id}`);
-};
 
 const columns: GridColDef<(typeof rows)[number]>[] = [
   { field: 'id', headerName: 'ID', width: 90, headerAlign: 'center', align: 'center' },
@@ -47,25 +41,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     headerAlign: 'center',
     align: 'center',
     renderCell: (params: GridRenderCellParams) => (
-      <Box>
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => handleEdit(params.row.id)}
-          sx={{ mr: 1 }}
-        >
-          Editar
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          onClick={() => handleDelete(params.row.id)}
-        >
-          Excluir
-        </Button>
-      </Box>
+      <EditarModal id={params.row.id} />
     ),
   },
 ];
@@ -89,12 +65,12 @@ export default function Table() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh', 
+        height: '400px',
+        paddingTop: '20px',
       }}
     >
       <Box sx={{ height: 400, width: 700 }}>
         <DataGrid
-        autoHeight
           rows={rows}
           columns={columns}
           initialState={{

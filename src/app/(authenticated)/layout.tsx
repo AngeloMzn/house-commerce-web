@@ -1,7 +1,8 @@
 'use client';
 import type { Metadata } from "next";
 import { SessionProvider, useSession } from "next-auth/react";
-import "/src/app/globals.css";
+import "../../app/styles/globals.css"
+
 
 
 interface RootLayoutAuthenticatedProps {

@@ -1,5 +1,4 @@
 import NextAuth from 'next-auth/next';
-import GoogleProvider from 'next-auth/providers/google';
 
 const handler = NextAuth({
     providers: [
@@ -12,7 +11,7 @@ const handler = NextAuth({
                 password: { label: 'Password', type: 'password' },
             },
             authorize: async (credentials) => {
-
+                
             }
         },            
     ]});

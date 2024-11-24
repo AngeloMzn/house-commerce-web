@@ -1,6 +1,6 @@
 import UnautenticatedNavBar from "@/components/Navbar/unauthenticatedNavbar";
 import type { Metadata } from "next";
-
+import "../../app/styles/globals.css"
 
 
 

@@ -3,21 +3,23 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+
 import "../../app/styles/globals.css"
 
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "../ui/button"
+import { Input } from "../../ui/input"
+import { Button } from "../../ui/button"
 
-const SignupSchema = z.object({
+
+
+const SigninSchema = z.object({
     email: z.string().min(2, {
         message: "Username must be at least 2 characters.",
     }),
@@ -28,12 +30,11 @@ const SignupSchema = z.object({
     })
 })
 
-export function SignupForm() {
-    const LoginForm = useForm<z.infer<typeof SignupSchema>>({
-        resolver: zodResolver(SignupSchema),
+export function SigninForm() {
+    const LoginForm = useForm<z.infer<typeof SigninSchema>>({
+        resolver: zodResolver(SigninSchema),
     })
-
-    function onSubmit(data: z.infer<typeof SignupSchema>) {
+    function onSubmit(data: z.infer<typeof SigninSchema>) {
         console.log(data);
     }
 
@@ -41,7 +42,7 @@ export function SignupForm() {
         <section>
             <div className="flex items-center justify-center min-h-screen">
                 <div className="rounded bg-white p-10 shadow-2xl w-full max-w-lg">
-                    <h1 className="text-3xl font-light"><strong>Insira suas credenciais para registrar-se</strong></h1>
+                    <h1 className="text-3xl font-light"><strong>Insira suas credenciais para iniciar sessão</strong></h1>
                     <hr />
                     <Form {...LoginForm}>
                         <form onSubmit={LoginForm.handleSubmit(onSubmit)} className="space-y-8 pt-5">
@@ -52,7 +53,7 @@ export function SignupForm() {
                                     <FormItem>
                                         <FormLabel>Email:</FormLabel>
                                         <FormControl>
-                                            <Input type="email" placeholder="Digite seu email." {...field} />
+                                            <Input type="email" placeholder="Digite seu nome de usuário." {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -72,7 +73,10 @@ export function SignupForm() {
                                 )}
                             />
                             <div className="flex items-center justify-center">
-                                <Button className="w-full" type="submit">Cadastrar</Button>
+                                <Button className="w-full" type="submit">Entrar</Button>
+                            </div>
+                            <div className="flex items-center justify-left">
+                            <a href="http://" className="text-black underline">Esqueceu a senha ?</a>
                             </div>
                         </form>
                     </Form>
