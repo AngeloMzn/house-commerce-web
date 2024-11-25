@@ -19,12 +19,10 @@ function Error403() {
 }
 
 function AuthenticatedContent({ children }: RootLayoutAuthenticatedProps) {
-  const { data: session, status } = useSession();
-
   if (status === "loading") {
     return <div>Loading...</div>;
   }
-
+  const session = localStorage.getItem('user');
   if (!session) {
     return <Error403 />;
   }
@@ -34,12 +32,10 @@ function AuthenticatedContent({ children }: RootLayoutAuthenticatedProps) {
 
 export default function RootLayoutAuthenticated({ children }: RootLayoutAuthenticatedProps) {
   return (
-    <SessionProvider>
       <html lang="pt-br">
         <body>
           <AuthenticatedContent>{children}</AuthenticatedContent>
         </body>
       </html>
-    </SessionProvider>
   );
 }

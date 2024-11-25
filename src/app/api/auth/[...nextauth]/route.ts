@@ -13,9 +13,8 @@ const handler = NextAuth({
                 email: { label: 'Email', type: 'email' },
                 password: { label: 'Password', type: 'password' },
             },
-            authorize: async (credentials) => {
-                console.log('Credentials received:', credentials);
-            
+            authorize: async (credentials, req) => {
+                debugger;
                 try {
                     const response = await axios.post(
                         'http://localhost:3001/login',
@@ -30,13 +29,9 @@ const handler = NextAuth({
                             },
                         }
                     );
-            
-                    console.log('API Response:', response.data);
-            
                     if (response.data) {
                         const user = {
                             id: response.data.id,
-                            name: response.data.name,
                             email: response.data.email,
                         };
                         console.log('User:', user);
@@ -52,7 +47,7 @@ const handler = NextAuth({
         },
     ],
     pages: {
-        signIn: '/login',
+        signIn: '/signin',
         signOut: '/',
     },
 });

@@ -19,9 +19,9 @@ import { Button } from "../../ui/button"
 import axios from "axios"
 import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
-import { signIn, useSession } from "next-auth/react"
+import { signIn } from "next-auth/react"
 
-
+type SigninSchema = z.infer<typeof SigninSchema>
 
 const SigninSchema = z.object({
     email: z.string().min(2, {
@@ -39,21 +39,29 @@ export function SigninForm() {
         resolver: zodResolver(SigninSchema),
     })
 
-   const router = useRouter();  
-    async function onSubmit(data: z.infer<typeof SigninSchema>) {
-        try {
-            const response = await signIn('credentials', {
-                email: data.email,
-                password: data.password
-            });
+    const router = useRouter();
 
-            if (response?.status === 200) {
-                router.push('/index');
-                toast.success('Login efetuado com sucesso');	
+    async function onSubmit(data: SigninSchema) {
+        const response = await axios.post(
+            'http://localhost:3001/login',
+            data,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_KEY}`,
+                },
             }
-        } catch (error) {
-            console.error('Error during signup:', error);
-            toast.error('Error during signup ' + error);
+        );
+        if (response.data) {
+            const user = {
+                id: response.data.user.id,
+                email: response.data.user.email,
+            };
+            localStorage.setItem('user', JSON.stringify(user));
+            toast.success(response.data.message);
+            router.push('/index');
+        } else {
+            toast.error(response.data.message);
         }
     }
 
@@ -95,7 +103,7 @@ export function SigninForm() {
                                 <Button className="w-full" type="submit">Entrar</Button>
                             </div>
                             <div className="flex items-center justify-left">
-                            <a href="http://" className="text-black underline">Esqueceu a senha ?</a>
+                                <a href="http://" className="text-black underline">Esqueceu a senha ?</a>
                             </div>
                         </form>
                     </Form>

@@ -4,7 +4,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { EditarProdutoForm } from '../Forms/user/editar-usuario';
+import { EditarProdutoForm } from '../Forms/produto/editar-produto';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { toast, ToastContainer } from 'react-toastify';
 
 const style = {
     position: 'absolute',
@@ -25,11 +28,26 @@ interface EditarModalProps {
 
 export default function EditarProdutoModal({ id }: EditarModalProps) {
     const [open, setOpen] = React.useState(false);
+    const router = useRouter();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const handleDelete = (id: number) => {
-        console.log(`Delete row with id: ${id}`);
+    const handleDelete = async (id: number) => {
+        const response = await axios.delete(
+            'http://localhost:3001/product/' + id,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_KEY}`,
+                },
+            }
+        );
+        if (response.data) {
+            toast(response.data.message);
+            window.location.reload();
+        } else {
+            alert(response.data.message);
+        }
     };
 
     return (
@@ -65,9 +83,10 @@ export default function EditarProdutoModal({ id }: EditarModalProps) {
                         Editar Produto
                     </Typography>
                     <hr />
-                    <EditarProdutoForm/>
+                    <EditarProdutoForm id={id}/>
                 </Box>
             </Modal>
+            <ToastContainer />
         </div>
     );
 }

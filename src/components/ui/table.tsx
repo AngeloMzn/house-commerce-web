@@ -1,64 +1,90 @@
 'use client';
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import EditarModal from '../modals/editar-produto-modal';
+import axios from 'axios';
 
-
-
-const columns: GridColDef<(typeof rows)[number]>[] = [
-  { field: 'id', headerName: 'ID', width: 90, headerAlign: 'center', align: 'center' },
-  {
-    field: 'descricao',
-    headerName: 'Descrição',
-    width: 150,
-    editable: true,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'preco',
-    headerName: 'Preço',
-    width: 150,
-    editable: true,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'tipo',
-    headerName: 'Tipo',
-    type: 'number',
-    width: 110,
-    editable: true,
-    headerAlign: 'center',
-    align: 'center',
-  },
-  {
-    field: 'acao',
-    headerName: 'Ação',
-    sortable: false,
-    width: 200,
-    headerAlign: 'center',
-    align: 'center',
-    renderCell: (params: GridRenderCellParams) => (
-      <EditarModal id={params.row.id} />
-    ),
-  },
-];
-
-const rows = [
-  { id: 1, descricao: 'Snow', preco: 'Jon', tipo: 14 },
-  { id: 2, descricao: 'Lannister', preco: 'Cersei', tipo: 31 },
-  { id: 3, descricao: 'Lannister', preco: 'Jaime', tipo: 31 },
-  { id: 4, descricao: 'Stark', preco: 'Arya', tipo: 11 },
-  { id: 5, descricao: 'Targaryen', preco: 'Daenerys', tipo: 123 },
-  { id: 6, descricao: 'Melisandre', preco: 123, tipo: 150 },
-  { id: 7, descricao: 'Clifford', preco: 'Ferrara', tipo: 44 },
-  { id: 8, descricao: 'Frances', preco: 'Rossini', tipo: 36 },
-  { id: 9, descricao: 'Roxie', preco: 'Harvey', tipo: 65 },
-];
+interface Product {
+  id: number;
+  descricao: string;
+  preco: number | string;  
+  tipo: number;
+}
 
 export default function Table() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 90, headerAlign: 'center', align: 'center' },
+    {
+      field: 'descricao',
+      headerName: 'Descrição',
+      width: 150,
+      editable: true,
+      headerAlign: 'center',
+      align: 'center',
+    },
+    {
+      field: 'preco',
+      headerName: 'Preço',
+      width: 150,
+      editable: true,
+      headerAlign: 'center',
+      align: 'center',
+    },
+    {
+      field: 'tipo',
+      headerName: 'Tipo',
+      width: 110,
+      editable: true,
+      headerAlign: 'center',
+      align: 'center',
+    },
+    {
+      field: 'acao',
+      headerName: 'Ação',
+      sortable: false,
+      width: 200,
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: (params: GridRenderCellParams<Product>) => (
+        <EditarModal id={params.row.id} />
+      ),
+    },
+  ];
+
+
+  async function fetchProducts(): Promise<void> {
+    try {
+      const response = await axios.get('http://localhost:3001/products', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_API_KEY}`,
+        },
+      });
+      console.log('Response:', response.data);
+      if (response.data) {
+        const rows = response.data.map((product: any) => ({
+          id: product.id,
+          descricao: product.description,  
+          preco: product.price,            
+          tipo: product.type,              
+        }));
+        console.log('Rows:', rows);
+        setProducts(rows);  
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  }, []); 
+
   return (
     <Box
       sx={{
@@ -71,8 +97,10 @@ export default function Table() {
     >
       <Box sx={{ height: 400, width: 700 }}>
         <DataGrid
-          rows={rows}
+          rows={products} 
           columns={columns}
+          paginationModel={{ pageSize: 5, page: 0 }}
+          pageSizeOptions={[5]}
           initialState={{
             pagination: {
               paginationModel: {
@@ -80,7 +108,6 @@ export default function Table() {
               },
             },
           }}
-          pageSizeOptions={[5]}
         />
       </Box>
     </Box>

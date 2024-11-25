@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { CadastrarProdutoForm } from '../Forms/user/cadastrar-usuario';
+import { CadastrarProdutoForm } from '../Forms/produto/cadastrar-produto';
 
 const style = {
     position: 'absolute',
